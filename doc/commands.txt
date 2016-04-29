@@ -1,0 +1,7 @@
+MSG <nick> <rest>
+Sends the message <rest> to <nick>. Nick can be a channel name, too.
+
+LOGTOFILE <file> <text>
+If <file> doesn't exist, it'll be created, and <text> will be written to it.
+Otherwise <text> will be appended to <file>
+

@@ -1,0 +1,92 @@
+  The UnrealBot's configfile is an XML 1.0 document, enclosed by 
+<urbot></urbot> tags. In the urbot tag, you have to specify, which version is
+the file was written (e.g the first public release, 1.0 requires <urbot
+version="1.0"></urbot> tag-pair). I don't plan to change the bot so much in
+the future, so any later bots will read this file, but it's not sure that older
+bots will, too. If you omit the version attribute, it defaults to 1.0
+  Also, you MUST set the owner's nickname in this tag, too, with the owner
+attribute.
+  Example:
+<urbot version="1.0" owner="MyNick">
+  ...
+</urbot>
+
+  As the file is a real XML document (it is parsed with expat), you can put
+comments anywhere you want.
+  Example:
+<!-- This is a comment -->
+
+  In the main section you can define the bot's parameters: nickname (nick tag),
+username (uname tag) and real name (realname tag). You cannot use the []
+substitutions in these tags ([] substs are described later), except [owner].
+Others will evaluate to "" (null-string), even if they are already declared).
+  If you don't use services, it is possible that the bot's nick is already
+chosen by someone else, so you can set alternative nicknames with the altnick
+tag. You can chose more then one altnick.
+  Example:
+<nick>URbot</nick>
+<realname>[nick] bot of [owner]</realname>
+  This will set the nickname to "URbot", and realname to " bot of MyNick".
+
+  You can add a server with the server tag. The only thing you have to declare
+here is the server's address within the server tag. The port, if omitted,
+defaults to 6667. If the server wants a password from you, you can specify it
+between password tags. You can define commands to execute when the bot is
+connected to the server. You can define the order the bot tries these servers
+with the autoconnect tag. If you omit this tag, the bot will try the server if
+it is said to. (See commands.txt)
+  Example:
+<server address="192.168.1.2">
+  <port>6789</port>
+  <password>botpassword</password>
+  <initcmd>COMMAND1</initcmd>
+  <initcmd>COMMAND2</initcmd>
+  <autoconnect>1</autoconnect>
+</server>
+
+  Each channel you want your bot to watch on is between chan tags. You have to
+specify the name for the channel only. You can, at your option, set actions
+what to do if the bot doesn't have ops, need invite to enter the channel, etc.
+If the bot has ops on the channel, it can preserve channel modes, too. If the
+channel has a key, you can set it with the chankey tag. The bot will use it
+automatically when tries to enter the channel.
+  Example:
+<chan name="#chan">
+  <chankey>ourkey</chankey>
+  <preservemodes>+nt-siklm</preservemodes>
+  <op>COMMAND_IF_NEED_OP</op>
+  <invite>COMMAND_IF_NEED_INVITE</invite>
+  <unban>COMMAND_IF_NEED_UNBAN</unban>
+  <limit>COMMAND_IF_NEED_LIMIT</limit>
+  <key>COMMAND_IF_NEED_KEY</key>
+</chan>
+
+  The most important option of the UnrealBot is to react to events on IRC.
+These events are: join (happens when someone joins a watched channel), part
+(happens when someone leaves a watched channel), msg (when someone sends a
+private message to the bot), pub (when someone says something on a watched
+channel), quit (when someone on a watched channel leaves IRC). If you want a
+specific event to occur only on a specific channel, you can set it with the
+chan tag. You have to set the command(s) you want to execute on this event.
+  Example:
+<react type="join">
+  <chan>#chan</chan>
+  <command>MSG [chan] Hello, [nick]!</command>
+  <command>MSG [owner] [nick] entered [chan]</command>
+</react>
+
+[] substitutions
+
+[open]   Evaluates to [
+[close]  Evaluates to ]
+[owner]  The nickname of the bot-owner (specified by <owner></owner>
+[server] The name of server the bot is connected to. Specified by 
+         <server><name></name></server>
+[chan]   The channel's name  (e.g which the event occured on)
+[nick]   The nickname (e.g who triggered the event)
+[rest]   The rest of the text (e.g the message in a msg event, or the quit
+         message of a quit event.
+
+A complete example can be found in the source tarball under doc/example.conf
+
+*** Written by W00d5t0ck 2003-08-10

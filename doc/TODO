@@ -1,0 +1,4 @@
+Change perror()s to something that doesn't write to std[in|out|err].
+E.g. logging.
+
+config.c:225
